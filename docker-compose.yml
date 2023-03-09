@@ -25,15 +25,15 @@ services:
             - mysql
             - redis
 
-    horizon:
-        image: my_php
-        restart: always
-        working_dir: /app
-        command: ["php", "artisan", "horizon"]
-        volumes:
-            - ./:/app
-        depends_on:
-            - php
+    # horizon:
+    #     image: my_php
+    #     restart: always
+    #     working_dir: /app
+    #     command: ["php", "artisan", "horizon"]
+    #     volumes:
+    #         - ./:/app
+    #     depends_on:
+    #         - php
 
     cron:
         image: my_php
@@ -72,8 +72,8 @@ services:
         image: redis:7.0.7-bullseye
         restart: always
         # Uncomment to enable Redis persistent storage:
-        #command: [ "redis-server", "--appendonly", "yes" ]
-        #volumes:
-        #- ./docker/redis/data:/data
+        command: ["redis-server", "--appendonly", "yes"]
+        volumes:
+            - ./docker/redis/data:/data
         ports:
             - 127.0.0.1:${REDIS_EXPOSED_PORT:-0}:6379
