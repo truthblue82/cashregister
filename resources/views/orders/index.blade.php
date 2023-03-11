@@ -1,4 +1,5 @@
-@extends('users.layout')
+@extends('orders.layout')
+
 
 
 @section('content')

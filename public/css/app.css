@@ -30,6 +30,13 @@ code {
   cursor: pointer;
   margin: 0 0.5rem 0 0;
 }
+.show {
+  display: block;
+}
+
+.hiden {
+  display: none !important;
+}
 
 .float-right {
   text-align: right;
@@ -56,6 +63,8 @@ code {
   height: 40vmin;
   pointer-events: none;
 }
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
