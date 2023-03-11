@@ -37,8 +37,3 @@ Open phpmyadmin: http://localhost:88 and import data from the script at `data/la
 
 localhost home page: http://localhost:{APP_EXPOSED_PORT} in your web browser.
 Cash register page: http://localhost/products in your web browser.
-
-## Using Passport for login
-
-$>`docker run --rm -it -v $(pwd):/app my_php composer require laravel/passport`
-$>`docker run --rm -it -v $(pwd):/app my_php php artisan migrate`
