@@ -1,6 +1,6 @@
 # CashRegister
 
-## Start services
+## How to deploy
 
 Get `master` branch of code
 
@@ -22,3 +22,8 @@ $>docker-compose up -d
 $>docker-compose ps
 
 Surf localhos:{APP_EXPOSED_PORT} in your web browser.
+
+## Using Passport for login
+
+$>docker run --rm -it -v $(pwd):/app my_php composer require laravel/passport
+$>docker run --rm -it -v $(pwd):/app my_php php artisan migrate

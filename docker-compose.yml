@@ -1,5 +1,8 @@
 version: "3"
 
+networks:
+    laravel:
+
 services:
     nginx:
         image: nginx:1.23.3-alpine
@@ -11,8 +14,11 @@ services:
             - ./docker/nginx/logs/:/var/log/nginx/
         ports:
             - ${APP_EXPOSED_PORT:-0}:80
+            - 8000:8000
         depends_on:
             - php
+        networks:
+            - laravel
 
     php:
         build: ./docker/php
@@ -24,6 +30,23 @@ services:
         depends_on:
             - mysql
             - redis
+        networks:
+            - laravel
+
+    # frontend:
+    #     image: node:16.16
+    #     container_name: npm
+    #     volumes:
+    #         - ./frontend:/frontend
+    #         - .env:/frontend/.env
+    #     working_dir: /frontend
+    #     entrypoint: ["npm"]
+    #     depends_on:
+    #         - php
+    #     ports:
+    #         - 3000:3000
+    #     networks:
+    #         - laravel
 
     # horizon:
     #     image: my_php
@@ -45,16 +68,33 @@ services:
         depends_on:
             - php
 
+    # mysql:
+    #     image: mysql:8.0.31-debian
+    #     restart: always
+    #     environment:
+    #         - MYSQL_DATABASE=${DB_DATABASE:-app}
+    #         - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-password}
+    #     ports:
+    #         - 127.0.0.1:${MYSQL_EXPOSED_PORT:-0}:3306
+    #     volumes:
+    #         - ./docker/mysql:/var/lib/mysql
+    #     networks:
+    #         - laravel
     mysql:
-        image: mysql:8.0.31-debian
-        restart: always
-        environment:
-            - MYSQL_DATABASE=${DB_DATABASE:-app}
-            - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-password}
+        image: mysql:5.7
+        restart: unless-stopped
+        tty: true
         ports:
-            - 127.0.0.1:${MYSQL_EXPOSED_PORT:-0}:3306
-        volumes:
-            - ./docker/mysql:/var/lib/mysql
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE:-app}
+            MYSQL_USER: test
+            MYSQL_PASSWORD: ${DB_PASSWORD:-123456}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-123456}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - laravel
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin:latest
@@ -67,6 +107,8 @@ services:
             - ./docker/phpmyadmin:/app
         ports:
             - "88:80"
+        networks:
+            - laravel
 
     redis:
         image: redis:7.0.7-bullseye
@@ -77,3 +119,16 @@ services:
             - ./docker/redis/data:/data
         ports:
             - 127.0.0.1:${REDIS_EXPOSED_PORT:-0}:6379
+
+    # artisan:
+    #     build:
+    #         context: .
+    #         dockerfile: ./docker/php/Dockerfile
+    #     volumes:
+    #         - ./:/app
+    #     depends_on:
+    #         - mysql
+    #     working_dir: /app
+    #     entrypoint: ["php", "/app/artisan"]
+    #     networks:
+    #         - laravel
