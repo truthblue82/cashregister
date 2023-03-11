@@ -31,7 +31,9 @@ $>chmod -R 0777 bootstrap/cache
 $>docker run --rm -it -v $(pwd):/app my_php composer install
 $>docker run --rm -it -v $(pwd):/app my_php php artisan key:generate
 
-$>docker-compose up -d
+### Run Rest API
+
+$>docker-compose exec php php artisan serve
 
 Open phpmyadmin: http://localhost:88 and import data from the script at `data/laravel.sql`
 

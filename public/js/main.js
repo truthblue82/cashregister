@@ -40,23 +40,40 @@ window.onload = () => {
     document.getElementById('total').value = totalPrice + parseInt(document.getElementById('total').value);
   };
 
-  document.getElementById('calBtn').onclick = () => {
+  document.getElementById('calBtn').onclick = async () => {
     //cal
-    calculateReturnedCash();
+    calculateReturnedCash(dataObj, items);
     //convert to money
 
     //save order & order items
+    //fetch('localhost:8000/orders')
+    const rawResponse = await fetch('http://localhost:8000/orders', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataObj)
+    });
+    const content = await rawResponse.json();
+
+    console.log(content);
   }
 }
 
-function calculateReturnedCash() {
+function calculateReturnedCash(dataObj, items) {
   const receive = document.getElementById("receive").value;
   const total = document.getElementById('total').value;
   if (receive == 0 || total == 0) {
     alert("Please input received cash!");
   } else {
     let returned = receive - total;
-    document.getElementById('return').valuee = returned;
+    dataObj.total = total;
+    dataObj.received_cash = receive;
+    dataObj.return_cash = returned;
+    dataObj.items = items;
+
+    document.getElementById('return').value = returned;
     const exchange = document.getElementById('exchange');
     let strExChange = 'test';
     exchange.innerHTML = strExChange;

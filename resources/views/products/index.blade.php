@@ -1,6 +1,5 @@
 @extends('products.layout')
 
-
 @section('content')
   <div class="row">
     <div class="App">
@@ -8,8 +7,8 @@
           <div class="navbar navbar-expand-lg navbar-dark bg-light">
               <img src="{{asset('images/yicon.svg')}}" alt="logo" width="38" height="38" />
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                  <li><a class="nav-link px-2 active" href="#">Home</a></li>
-                  <li><a class="nav-link px-2 " href="#">Products</a></li>
+                  <li><a class="nav-link px-2 active" href="{{ url('/') }}">Home</a></li>
+                  <li><a class="nav-link px-2 " href="{{ url('/products') }}">Cash Register</a></li>
               </ul>
           </div>
       </header>
