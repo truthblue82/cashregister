@@ -47,17 +47,17 @@ window.onload = () => {
 
     //save order & order items
     //fetch('localhost:8000/orders')
-    const rawResponse = await fetch('http://localhost:8000/orders', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataObj)
-    });
-    const content = await rawResponse.json();
+    // const rawResponse = await fetch('http://localhost:8000/orders', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(dataObj)
+    // });
+    // const content = await rawResponse.json();
 
-    console.log(content);
+    // console.log(content);
   }
 }
 
@@ -75,14 +75,41 @@ function calculateReturnedCash(dataObj, items) {
 
     document.getElementById('return').value = returned;
     const exchange = document.getElementById('exchange');
-    let strExChange = 'test';
+    let strExChange = 'Change: ' + denominationUSA(returned);
     exchange.innerHTML = strExChange;
   }
 }
 
-function convertUSACurrency(number) {
+function denominationUSA(number) {
   let str = '';
-  return str;
+  const dollars = [100, 50, 20, ,10 ,5 , 2, 1];
+  const coins = [50, 25, 10, 5, 1];
+
+  let tmp = number.toString().split('.');
+  if (tmp[0]) {
+    let dl = parseInt(tmp[0]);
+    dollars.forEach(item => {
+      let t = parseInt(dl / item);
+      if (t) {
+        str += `, ${t*item}$`;
+      }
+      dl = dl % item;
+    });
+  }
+  if (tmp[1]) {
+    let cent;
+    if (tmp[1].length === 1) cent = parseInt(tmp[1]) * 10;
+    else cent = parseInt(tmp[1]);
+
+    coins.forEach(item => {
+      let c = parseInt(cent / item);
+      if (c) {
+        str += `, ${c * item}¢`;
+      }
+      cent = cent % item;
+    });
+  }
+  return str.substring(2);
 }
 
 function genProductListTitle(pList) {
